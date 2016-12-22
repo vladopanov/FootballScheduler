@@ -1,0 +1,120 @@
+body {
+    background: url("../resources/grassmain.jpg") repeat-x;
+    font-family: "Arial", serif;
+    font-size: 16px;
+    color: #3c3f41;
+}
+#wrapper {
+    margin: 0 auto;
+    width: 80%;
+}
+#menu {
+    background: #DDD;
+    text-align: center;
+    padding: 5px;
+    line-height: 1.5;
+    border-radius: 3px;
+    overflow: auto;
+    opacity: 0.5;
+}
+#menu a {
+    font-size: 1.5em;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+#menu a:hover {
+    background: #BBB;
+}
+main > section {
+    display: none;
+    padding: 20px 5px;
+}
+section h1 {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+table th {
+    background: #DDD;
+    padding: 10px;
+}
+table td {
+    padding: 3px 5px;
+    background: #EEE;
+}
+input {
+    line-height: 1.5em;
+}
+footer {
+    background: #DDD;
+    opacity: 0.5;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    text-align: center;
+    border-radius: 3px;
+}
+.buttonsTd {
+    text-align: center;
+}
+img {
+    width: 20px;
+    vertical-align: middle;
+}
+#playersDiv {
+    width: 40%;
+    float: left;
+}
+#chatDiv {
+    width: 55%;
+    float: right;
+}
+#messageInput {
+    width: 85%;
+    margin-bottom: 5px;
+}
+#viewPlayers {
+    overflow: auto;
+}
+#players table {
+    width: 100%;
+}
+#messagesContainer {
+    background-color: #EEE;
+    border: thin black;
+}
+.messages {
+    margin: 0 5px;
+    font-size: 0.8em;
+}
+#inputMessage {
+    width: 100%;
+}
+#messageButton {
+    margin: 5px 0;
+}
+.boldUsername {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        font-size: 22px;
+    }
+    #wrapper {
+        width: 100%;
+    }
+    #menu a{
+        display: block;
+        font-size: 1.2em;
+    }
+    #players {
+        font-size: 0.8em;
+    }
+    #tableName {
+        width: 70%;
+    }
+    #viewPlayers > div {
+        float: none;
+        width: 100%;
+    }
+}
