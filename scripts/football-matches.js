@@ -1,4 +1,11 @@
 function startApp() {
+    const kinveyBaseUrl = "https://baas.kinvey.com/";
+    const kinveyAppKey = "kid_BkYeq_3mg";
+    const kinveyAppSecret = "f793fbfdc5fd441d9c439747176092e2";
+    const kinveyAppAuthHeaders = {
+        'Authorization': `Basic ${btoa(kinveyAppKey + ":" + kinveyAppSecret)}`
+    };
+
     //localStorage.clear(); // Clear user auth data
     $.noty.defaults.timeout = 3000;
     showHideMenuLinks();
@@ -71,8 +78,8 @@ function startApp() {
 
     function loginUser() {
         let userData = {
-            username: $('#formLogin input[name=username]').val(),
-            password: $('#formLogin input[name=passwd]').val()
+            username: $("#formLogin input[name=username]").val(),
+            password: $("#formLogin input[name=passwd]").val()
         };
 
         $.ajax({
@@ -87,21 +94,21 @@ function startApp() {
             saveAuthInSession(userInfo);
             showHideMenuLinks();
             listPlayers();
-            noty({text: 'Успешно влизане.', type: "success"});
+            noty({text: "Успешно влизане.", type: "success"});
         }
     }
 
     function registerUser() {
         let userData = {
-            username: $('#formRegister input[name=username]').val(),
-            password: $('#formRegister input[name=passwd]').val(),
-            confirmPassword: $('#formRegister input[name=confirmPasswd]').val()
+            username: $("#formRegister input[name=username]").val(),
+            password: $("#formRegister input[name=passwd]").val(),
+            confirmPassword: $("#formRegister input[name=confirmPasswd]").val()
         };
 
-        if (userData.password != userData.confirmPassword) {
+        if (userData.password !== userData.confirmPassword) {
             noty({text: "Потвърдената парола не съвпада", type: "error"});
 
-            showView('viewRegister');
+            showView("viewRegister");
             return false;
         }
 
@@ -117,17 +124,19 @@ function startApp() {
             saveAuthInSession(userInfo);
             showHideMenuLinks();
             listPlayers();
-            noty({text: 'Успешна регистрация', type: "success"});
+            noty({text: "Успешна регистрация", type: "success"});
         }
+
+        return false;
     }
 
     function saveAuthInSession(userInfo) {
         let userAuth = userInfo._kmd.authtoken;
-        localStorage.setItem('authToken', userAuth);
+        localStorage.setItem("authToken", userAuth);
         let userId = userInfo._id;
-        localStorage.setItem('userId', userId);
+        localStorage.setItem("userId", userId);
         let username = userInfo.username;
-        localStorage.setItem('username', username);
+        localStorage.setItem("username", username);
     }
 
     function handleAjaxError(response) {
@@ -142,15 +151,15 @@ function startApp() {
 
     function logoutUser() {
         localStorage.clear();
-        $('#loggedInUser').text("");
+        $("#loggedInUser").text("");
         showHideMenuLinks();
-        showView('viewHome');
-        noty({text: 'Успешно излизане.', type: "success"});
+        showView("viewHome");
+        noty({text: "Успешно излизане.", type: "success"});
     }
 
     function listPlayers() {
-        $('#players').empty();
-        showView('viewPlayers');
+        $("#players").empty();
+        showView("viewPlayers");
         let dt = new Date();
         let year = dt.getFullYear();
         let month = Number(dt.getMonth() + 1);
@@ -169,13 +178,13 @@ function startApp() {
         }
 
         date = day + "-" + month  + "-" + year;
-        $('#dateTime').text(dayOfWeekString + " " + date);
+        $("#dateTime").text(dayOfWeekString + " " + date);
 
         getMatch();
         loadMessages();
 
         function getMatch() {
-            let query = '?query={"date":"' + date + '"}';
+            let query = `?query={"date":"${date}"}`;
             $.ajax({
                 method: "GET",
                 url: kinveyBaseUrl + "appdata/" + kinveyAppKey + "/matches/" + query,
@@ -184,7 +193,7 @@ function startApp() {
                 error: handleAjaxError
             });
             function getMatchSuccess(match) {
-                if (match.length == 0) {
+                if (match.length === 0) {
                     createMatch(date);
                 } else {
                     getPlayers(match[0]._id);
@@ -210,7 +219,7 @@ function startApp() {
         }
 
         function getPlayers(matchId) {
-            let query = '?query={"match_id":"' + matchId + '"}';
+            let query = `?query={"match_id":"${matchId}"}`;
 
             $.ajax({
                 method: "GET",
@@ -221,9 +230,9 @@ function startApp() {
             });
 
             function loadPlayersSuccess(players) {
-                $('#players').empty();
-                let playersTable = $('<table>')
-                    .append($('<tr>').append(
+                $("#players").empty();
+                let playersTable = $("<table>")
+                    .append($("<tr>").append(
                         '<th>№</th><th id="tableName">Име</th><th class="buttonsTd">+/-</th>'));
                 let counter = 1;
                 for (let player of players) {
@@ -231,17 +240,17 @@ function startApp() {
                     counter++;
                 }
 
-                let player = localStorage.getItem('username');
-                let createPlayerRaw = ($('<tr>').append(
-                    $('<td>').text(counter),
-                    $('<td><div><input type="text" id="playerName"></div></td>'),
-                    $('<td class="buttonsTd">').append($('<a href="#"><img src="../resources/plus-4-xxl.png"></a>')
+                let player = localStorage.getItem("username");
+                let createPlayerRaw = ($("<tr>").append(
+                    $("<td>").text(counter),
+                    $("<td><div><input type=\"text\" id=\"playerName\"></div></td>"),
+                    $("<td class=\"buttonsTd\">").append($('<a href="#"><img src="../resources/plus-4-xxl.png" alt=""></a>')
                         .click(createPlayer.bind(this, matchId)))
                 ));
-                $('#playerName').val(player);
+                $("#playerName").val(player);
 
                 playersTable.append(createPlayerRaw);
-                $('#players').append(playersTable);
+                $("#players").append(playersTable);
 
                 $(document).ready(function(){
                     $("#playerName").attr("value", player);
@@ -249,11 +258,10 @@ function startApp() {
             }
 
             function appendPlayerRow(player, playersTable, counter) {
-                // TODO: action links will come later
-                playersTable.append($('<tr>').append(
-                    $('<td>').text(counter),
-                    $('<td>').text(player.name),
-                    $('<td class="buttonsTd">').append($('<a href="#"><img src="../resources/minus-4-xxl.png"></a>')
+                playersTable.append($("<tr>").append(
+                    $("<td>").text(counter),
+                    $("<td>").text(player.name),
+                    $("<td class=\"buttonsTd\">").append($('<a href="#"><img src="../resources/minus-4-xxl.png" alt=""></a>')
                         .click(removePlayer.bind(this, player)))
                 ));
             }
@@ -262,13 +270,12 @@ function startApp() {
 
     function getKinveyUserAuthHeaders() {
         return {
-            'Authorization': "Kinvey " +
-            localStorage.getItem('authToken')
+            'Authorization': `Kinvey ${localStorage.getItem("authToken")}`
         };
     }
     
     function createPlayer(matchId) {
-        let playerData = {"name": $('#playerName').val(), "match_id":matchId};
+        let playerData = {"name": $("#playerName").val(), "match_id":matchId};
 
         $.ajax({
             method: "POST",
@@ -281,7 +288,7 @@ function startApp() {
 
         function createPlayerSuccess() {
             listPlayers();
-            noty({text: 'Създаден е нов играч', type: "information"});
+            noty({text: "Създаден е нов играч", type: "information"});
         }
     }
 
@@ -295,16 +302,16 @@ function startApp() {
         });
         function removePlayerSuccess() {
             listPlayers();
-            noty({text: 'Премахнат е играч', type: "information"});
+            noty({text: "Премахнат е играч", type: "information"});
         }
     }
 
     $(document).ready(function () {
-        $('input[name="submitMessage"]').on('click', function (e) {
+        $('input[name="submitMessage"]').on("click", function (e) {
             e.preventDefault();
 
-            let data = $(this).closest('form');
-            let serialized = data.serialize() + '&username=' + localStorage.getItem("username") + '&match_id=' + date;
+            let data = $(this).closest("form");
+            let serialized = `${data.serialize()}&username=${localStorage.getItem("username")}&match_id=${date}`;
 
             $.ajax({
                 method: "POST",
@@ -314,17 +321,17 @@ function startApp() {
                 success: createMessageSuccess,
                 error: handleAjaxError
             });
-            function createMessageSuccess(response) {
-                $('#formMessages input[name=message]').val('');
+            function createMessageSuccess() {
+                $("#formMessages input[name=message]").val("");
                 loadMessages();
                 noty({text: "Добавено е събощение", type: "information"});
             }
-        })
+        });
     });
 
     function loadMessages() {
-        $('#messagesContainer').empty();
-        let query = '?query={"match_id":"' + date + '"}';
+        $("#messagesContainer").empty();
+        let query = `?query={"match_id":"${date}"}`;
         $.ajax({
             method: "GET",
             url: kinveyBaseUrl + "appdata/" + kinveyAppKey + "/messages/" + query,
@@ -334,7 +341,7 @@ function startApp() {
         });
 
         function loadMessagesSuccess(messages) {
-            let messageContainer = $('#messagesContainer');
+            let messageContainer = $("#messagesContainer");
 
             for (let m of messages) {
                 appendMessageRaw(m, messageContainer);
@@ -342,20 +349,13 @@ function startApp() {
         }
 
         function appendMessageRaw(m, messageContainer) {
-            let pMessage = $('<p class="messages">');
-            let spanUsername = $('<span class="boldUsername">').text(m.username + ": ");
-            let spanMessage = $('<span>').text(m.message);
+            let pMessage = $("<p class=\"messages\">");
+            let spanUsername = $("<span class=\"boldUsername\">").text(m.username + ": ");
+            let spanMessage = $("<span>").text(m.message);
             pMessage.append(spanUsername);
             pMessage.append(spanMessage);
             messageContainer.append(pMessage);
         }
     }
-
-    const kinveyBaseUrl = "https://baas.kinvey.com/";
-    const kinveyAppKey = "kid_BkYeq_3mg";
-    const kinveyAppSecret = "f793fbfdc5fd441d9c439747176092e2";
-    const kinveyAppAuthHeaders = {
-        'Authorization': "Basic " + btoa(kinveyAppKey + ":" + kinveyAppSecret),
-    };
 }
 
