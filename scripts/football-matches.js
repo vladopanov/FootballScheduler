@@ -378,7 +378,7 @@ function startApp() {
         }
 
         function appendMessageRaw(m, messageContainer) {
-            let date = new Date(JSON.stringify(m.date));
+            let date = new Date(m.date);
             let pMessage = $("<p class=\"messages\">");
             let spanUsername = $("<span class=\"boldUsername\">").text(m.username);
             let spanMessage = $("<span>").text(` (${date.getHours()}:${date.getMinutes()}): ${m.message}`);
