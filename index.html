@@ -2,110 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Telenor Matches Scheduler</title>
-    <script src="scripts/jquery-3.1.1.min.js"></script>
-    <script src="scripts/jquery.noty.packaged.min.js"></script>
-    <script src="scripts/football-matches.js"></script>
-    <link rel="stylesheet" href="styles/football-matches.css">
+    <link href="Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="Content/football-matches.css">
 </head>
 <body onload="startApp()">
 <div id="wrapper">
-<header id="menu">
-    <a href="#" id="linkHome">Начало</a>
-    <a href="#" id="linkLogin">Вход</a>
-    <a href="#" id="linkRegister">Регистрация</a>
-    <a href="#" id="linkListPlayers">Играчи</a>
-    <a href="#" id="linkLogout">Изход</a>
-</header>
-<main>
-    <!--<section id="loadingBox">Loading ...</section>-->
-    <!--<section id="infoBox">Info</section>-->
-    <!--<section id="errorBox">Error</section>-->
-    <section id="viewHome">
-        <h1>Добре дошъл<span id="loggedInUser"></span>!</h1>
-    </section>
-    <section id="viewLogin">
-        <h1>Вход за потребители</h1>
-        <form id="formLogin">
-            <div>Потребителско име:</div>
-            <div>
-                <input type="text" name="username" required />
+    <header id="menu">
+        <a href="#" id="linkHome">Начало</a>
+        <a href="#" id="linkLogin">Вход</a>
+        <a href="#" id="linkRegister">Регистрация</a>
+        <a href="#" id="linkListPlayers">Играчи</a>
+        <a href="#" id="linkLogout">Изход</a>
+    </header>
+    <main>
+        <!--<section id="loadingBox">Loading ...</section>-->
+        <!--<section id="infoBox">Info</section>-->
+        <!--<section id="errorBox">Error</section>-->
+        <section id="viewHome">
+            <h1>Добре дошъл<span id="loggedInUser"></span>!
+            </h1>
+        </section>
+        <section id="viewLogin">
+            <h1>Вход за потребители</h1>
+            <form id="formLogin">
+                <div>Потребителско име:</div>
+                <div>
+                    <input type="text" name="username" required/>
+                </div>
+                <div>Парола:</div>
+                <div>
+                    <input type="password" name="passwd" required/>
+                </div>
+                <div>
+                    <input type="submit" value="Вход"/>
+                </div>
+            </form>
+        </section>
+        <section id="viewRegister">
+            <h1>Регистрация</h1>
+            <form id="formRegister">
+                <div>Потребителско име:</div>
+                <div>
+                    <input type="text" name="username" required/>
+                </div>
+                <div>Парола:</div>
+                <div>
+                    <input type="password" name="passwd" required/>
+                </div>
+                <div>Повтори парола:</div>
+                <div>
+                    <input type="password" name="confirmPasswd" required/>
+                </div>
+                <div>
+                    <input type="submit" value="Регистрация"/>
+                </div>
+            </form>
+        </section>
+        <section id="viewPlayers">
+            <div id="playersDiv">
+                <h1>Играчи</h1>
+                <p id="dateTime"></p>
+                <div id="players">
+                    <table>
+                        <tr>
+                            <th>№</th>
+                            <th>Picture</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Picture</td>
+                            <td>Pesho</td>
+                            <td>
+                                <a href="#">[Delete]</a>
+                                <a href="#">[Edit]</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div>Парола:</div>
-            <div>
-                <input type="password" name="passwd" required />
+            <div id="chatDiv">
+                <h1>Събощения</h1>
+                <div id="chatBoard">
+                    <form id="formMessages">
+                        <div>
+                            <input id="inputMessage" type="text" name="message" placeholder="Събщение">
+                        </div>
+                        <div>
+                            <input id="messageButton" type="submit" value="Добави" name="submitMessage"/>
+                        </div>
+                    </form>
+                    <div id="messagesContainer"></div>
+                </div>
             </div>
-            <div>
-                <input type="submit" value="Вход" />
-            </div>
-        </form>
-    </section>
-    <section id="viewRegister">
-        <h1>Регистрация</h1>
-        <form id="formRegister">
-            <div>Потребителско име:</div>
-            <div>
-                <input type="text" name="username" required />
-            </div>
-            <div>Парола:</div>
-            <div>
-                <input type="password" name="passwd" required />
-            </div>
-            <div>Повтори парола:</div>
-            <div>
-                <input type="password" name="confirmPasswd" required />
-            </div>
-            <div>
-                <input type="submit" value="Регистрация" />
-            </div>
-        </form>
-    </section>
-    <section id="viewPlayers">
-        <div id="playersDiv">
-            <h1>Играчи</h1>
-            <p id="dateTime"></p>
-            <div id="players">
-                <table>
-                    <tr>
-                        <th>№</th>
-                        <th>Picture</th>
-                        <th>Name</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Picture</td>
-                        <td>Pesho</td>
-                        <td>
-                            <a href="#">[Delete]</a>
-                            <a href="#">[Edit]</a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div id="chatDiv">
-            <h1>Събощения</h1>
-            <div id="chatBoard">
-                <form id="formMessages">
-                    <div>
-                        <input id="inputMessage" type="text" name="message" placeholder="Събщение">
-                    </div>
-                    <div>
-                        <input id="messageButton" type="submit" value="Добави" name="submitMessage"/>
-                    </div>
-                </form>
-                <div id="messagesContainer"></div>
-            </div>
-        </div>
-    </section>
-</main>
-<footer>
-    <audio controls loop autoplay>
-        <source src="resources\UEFA Champions League Theme (mp3goo.com).mp3">
-    </audio>
-</footer>
+        </section>
+        <section id="viewPlayerInfo">
+        </section>
+    </main>
+    <footer>
+        <audio controls loop autoplay>
+            <source src="resources\UEFA Champions League Theme (mp3goo.com).mp3">
+        </audio>
+    </footer>
 </div>
+<script src="scripts/jquery-3.1.1.min.js"></script>
+<script src="scripts/jquery.noty.packaged.min.js"></script>
+<script src="scripts/football-matches.js"></script>
 </body>
 </html>

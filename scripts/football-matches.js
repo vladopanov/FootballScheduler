@@ -15,7 +15,7 @@ function startApp() {
     // Bind the form submit actions
     $("#formLogin").submit(loginUser);
     $("#formRegister").submit(registerUser);
-    $("form").submit(function(e) { e.preventDefault() });
+    $("form").submit(function(e) { e.preventDefault(); });
 
     // Bind the navigation menu links
     $("#linkHome").click(showHomeView);
@@ -32,7 +32,7 @@ function startApp() {
     let loadingMsg;
     $(document).on({
         ajaxStart: function() { loadingMsg = noty({text: "Loading...", type: "alert"});},
-        ajaxStop: function() { loadingMsg.close() }
+        ajaxStop: function() { loadingMsg.close(); }
     });
 
     function showHideMenuLinks() {
@@ -241,12 +241,12 @@ function startApp() {
                 }
 
                 let player = localStorage.getItem("username");
-                let createPlayerRaw = ($("<tr>").append(
+                let createPlayerRaw = $("<tr>").append(
                     $("<td>").text(counter),
                     $("<td><div><input type=\"text\" id=\"playerName\"></div></td>"),
-                    $("<td class=\"buttonsTd\">").append($('<a href="#"><img src="../resources/plus-4-xxl.png" alt=""></a>')
+                    $("<td class=\"buttonsTd\">").append($('<button type="button" class="btn btn-default btn-md mybtn-green"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>')
                         .click(createPlayer.bind(this, matchId)))
-                ));
+                );
                 $("#playerName").val(player);
 
                 playersTable.append(createPlayerRaw);
@@ -260,12 +260,20 @@ function startApp() {
             function appendPlayerRow(player, playersTable, counter) {
                 playersTable.append($("<tr>").append(
                     $("<td>").text(counter),
-                    $("<td>").text(player.name),
-                    $("<td class=\"buttonsTd\">").append($('<a href="#"><img src="../resources/minus-4-xxl.png" alt=""></a>')
+                    $("<td>").html(`<a href='#'>${player.name}</a>`).click(showPlayer.bind(this, player)),
+                    $("<td class=\"buttonsTd\">").append($('<button type="button" class="btn btn-default btn-md mybtn-red"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></button>')
                         .click(removePlayer.bind(this, player)))
                 ));
             }
         }
+    }
+
+    // TODO: 
+    function showPlayer(player) {
+        $("main > section").hide();
+        $("#viewPlayerInfo").empty();
+        $("#viewPlayerInfo").show();
+        $("#viewPlayerInfo").append(`<div><h3>${player.name}`);
     }
 
     function getKinveyUserAuthHeaders() {
@@ -358,4 +366,3 @@ function startApp() {
         }
     }
 }
-

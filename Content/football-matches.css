@@ -4,6 +4,7 @@ body {
     font-size: 16px;
     color: #3c3f41;
 }
+
 #wrapper {
     margin: 0 auto;
     width: 80%;
@@ -13,10 +14,8 @@ body {
     text-align: center;
     padding: 5px;
     line-height: 1.5;
-    -ms-border-radius: 3px;
     border-radius: 3px;
     overflow: auto;
-    -ms-opacity: 0.5;
     opacity: 0.5;
 }
 
@@ -24,7 +23,6 @@ body {
     font-size: 1.5em;
     text-decoration: none;
     padding: 5px 10px;
-    -ms-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -52,12 +50,10 @@ input {
 }
 footer {
     background: #DDD;
-    -ms-opacity: 0.5;
     opacity: 0.5;
     padding: 5px 10px;
     font-size: 0.8em;
     text-align: center;
-    -ms-border-radius: 3px;
     border-radius: 3px;
 }
 
@@ -100,8 +96,63 @@ img {
 #messageButton {
     margin: 5px 0;
 }
+#messageButton:hover {
+    font-weight: bold;
+}
 .boldUsername {
     font-weight: bold;
+}
+.glyphicon-minus-sign {
+    color: red;
+}
+.glyphicon-plus-sign {
+    font-size: 100%;
+    animation: pulse 3s infinite;
+}
+
+@-moz-keyframes pulse {
+    0% {
+        color: green;
+        font-size: 100%;
+    }
+    50% {
+        color: lightgreen;
+        font-size: 50%;
+    }
+    100% {
+        color: green;
+        font-size: 100%;
+    }
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        color: green;
+        font-size: 100%;
+    }
+    50% {
+        color: lightgreen;
+        font-size: 50%;
+    }
+    100% {
+        color: green;
+        font-size: 100%;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        color: green;
+        font-size: 100%;
+    }
+    50% {
+        color: lightgreen;
+        font-size: 50%;
+    }
+    100% {
+        color: green;
+        font-size: 100%;
+    }
 }
 
 @media only screen and (max-width: 768px) {
