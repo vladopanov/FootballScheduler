@@ -102,6 +102,9 @@ function startApp() {
         let userData = {
             username: $("#formRegister input[name=username]").val(),
             password: $("#formRegister input[name=passwd]").val(),
+            firstName: $("#formRegister input[name=firstName]").val(),
+            lastName: $("#formRegister input[name=lastName]").val(),
+            phone: $("#formRegister input[name=phone]").val(),
             confirmPassword: $("#formRegister input[name=confirmPasswd]").val()
         };
 
@@ -273,7 +276,25 @@ function startApp() {
         $("main > section").hide();
         $("#viewPlayerInfo").empty();
         $("#viewPlayerInfo").show();
-        $("#viewPlayerInfo").append(`<div><h3>${player.name}`);
+
+        let query = `?query={"username":"${player.name}"}`;
+        $.ajax({
+            method: "GET",
+            url: kinveyBaseUrl + "user/" + kinveyAppKey + "/" + query,
+            headers: getKinveyUserAuthHeaders(),
+            success: loadPlayerInfo,
+            error: handleAjaxError
+        });
+
+        function loadPlayerInfo(data) {
+            if (JSON.stringify(data) === "[]") {
+                $("#viewPlayerInfo").append($("<div><h3>Няма тъкав регистриран играч</h3>"));
+            } else {
+                let playerInfoDiv = $("<div>").append(`<h3>${data[0].firstName} ${data[0].lastName}`)
+                .append(`<p>${data[0].phone}`);
+                $("#viewPlayerInfo").append(playerInfoDiv);
+            }
+        }
     }
 
     function getKinveyUserAuthHeaders() {
@@ -319,7 +340,7 @@ function startApp() {
             e.preventDefault();
 
             let data = $(this).closest("form");
-            let serialized = `${data.serialize()}&username=${localStorage.getItem("username")}&match_id=${date}`;
+            let serialized = `${data.serialize()}&username=${localStorage.getItem("username")}&match_id=${date}&date=${new Date()}`;
 
             $.ajax({
                 method: "POST",
@@ -357,9 +378,10 @@ function startApp() {
         }
 
         function appendMessageRaw(m, messageContainer) {
+            let date = new Date(JSON.stringify(m.date));
             let pMessage = $("<p class=\"messages\">");
-            let spanUsername = $("<span class=\"boldUsername\">").text(m.username + ": ");
-            let spanMessage = $("<span>").text(m.message);
+            let spanUsername = $("<span class=\"boldUsername\">").text(m.username);
+            let spanMessage = $("<span>").text(` (${date.getHours()}:${date.getMinutes()}): ${m.message}`);
             pMessage.append(spanUsername);
             pMessage.append(spanMessage);
             messageContainer.append(pMessage);

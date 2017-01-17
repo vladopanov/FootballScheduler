@@ -10,6 +10,9 @@
 </head>
 <body onload="startApp()">
 <div id="wrapper">
+    <div id="box">
+        <img id="ball" src="resources/soccer-ball-png-1.png" />
+    </div>
     <header id="menu">
         <a href="#" id="linkHome">Начало</a>
         <a href="#" id="linkLogin">Вход</a>
@@ -22,11 +25,11 @@
         <!--<section id="infoBox">Info</section>-->
         <!--<section id="errorBox">Error</section>-->
         <section id="viewHome">
-            <h1>Добре дошъл<span id="loggedInUser"></span>!
-            </h1>
+            <h2>Добре дошъл<span id="loggedInUser"></span>!
+            </h2>
         </section>
         <section id="viewLogin">
-            <h1>Вход за потребители</h1>
+            <h2>Вход за потребители</h2>
             <form id="formLogin">
                 <div>Потребителско име:</div>
                 <div>
@@ -42,7 +45,7 @@
             </form>
         </section>
         <section id="viewRegister">
-            <h1>Регистрация</h1>
+            <h2>Регистрация</h2>
             <form id="formRegister">
                 <div>Потребителско име:</div>
                 <div>
@@ -56,6 +59,18 @@
                 <div>
                     <input type="password" name="confirmPasswd" required/>
                 </div>
+                <div>Име:</div>
+                <div>
+                    <input type="text" name="firstName"/>
+                </div>
+                <div>Фамилия:</div>
+                <div>
+                    <input type="text" name="lastName"/>
+                </div>
+                <div>Телефон:</div>
+                <div>
+                    <input type="tel" name="phone"/>
+                </div>
                 <div>
                     <input type="submit" value="Регистрация"/>
                 </div>
@@ -63,7 +78,7 @@
         </section>
         <section id="viewPlayers">
             <div id="playersDiv">
-                <h1>Играчи</h1>
+                <h2>Играчи</h2>
                 <p id="dateTime"></p>
                 <div id="players">
                     <table>
@@ -86,7 +101,7 @@
                 </div>
             </div>
             <div id="chatDiv">
-                <h1>Събощения</h1>
+                <h2>Събощения</h2>
                 <div id="chatBoard">
                     <form id="formMessages">
                         <div>
