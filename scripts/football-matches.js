@@ -125,12 +125,107 @@ function startApp() {
         });
         function registerSuccess(userInfo) {
             saveAuthInSession(userInfo);
+            uploadPhoto();
             showHideMenuLinks();
             listPlayers();
             noty({text: "Успешна регистрация", type: "success"});
         }
 
         return false;
+    }
+
+    function uploadPhoto() {
+        let file = $("#formRegister input[name=photo]")[0].files[0];
+        let metaData = {
+            "_filename": file.name,
+            "size": file.size,
+            "mimeType": file.type,
+            "_public": true
+        }
+        upload(metaData);
+
+        function upload(data) {
+            let requestUrl = kinveyBaseUrl + "blob/" + kinveyAppKey;
+
+            let requestHeaders = {
+                'Authorization': `Kinvey ${localStorage.getItem("authToken")}`,
+                'Content-Type': 'application/json',
+                'X-Kinvey-Content-type': data.mimeType
+            };
+
+            $.ajax({
+                method: "POST",
+                url: requestUrl,
+                headers: requestHeaders,
+                data: JSON.stringify(data),
+                success: uploadSuccess,
+                error: handleAjaxError
+            });
+
+            function uploadSuccess(success) {
+                let innerHeaders = success._requiredHeaders;
+                innerHeaders['Content-Type'] = file.type;
+                let uploadUrl = success._uploadURL;
+                let url = uploadUrl.split("?")[0];
+                createPhoto(url);
+
+                $.ajax({
+                    method: "PUT",
+                    url: uploadUrl,
+                    headers: innerHeaders,
+                    processData: false,
+                    data: file
+                }).then(
+                    function (success) {
+                        noty({ text: "Успешно качена снимка", type: "success" });
+                    }
+                ).catch(
+                    function (error) {
+                        handleAjaxError();
+                    }
+                );
+            }
+        }
+    }
+
+    function createPhoto(url) {
+        let data = {
+            "url": url
+        }
+
+        $.ajax({
+            method: "POST",
+            url: kinveyBaseUrl + "appdata/" + kinveyAppKey + "/photos",
+            headers: getKinveyUserAuthHeaders(),
+            data: data,
+            success: createPhotoSuccess,
+            error: handleAjaxError
+        });
+        function createPhotoSuccess(success) {
+        }
+    }
+
+    function downloadPhoto(id) {
+        let query = `?query={"_acl.creator":"${id}"}`;
+        let requestUrl = kinveyBaseUrl + "appdata/" + kinveyAppKey + "/photos/" + query;
+        let requestHeaders = {
+            'Authorization': `Kinvey ${localStorage.getItem("authToken")}`,
+            'Content-Type': 'application/json'
+        };
+
+        $.ajax({
+            method: "GET",
+            url: requestUrl,
+            headers: requestHeaders
+        }).then(
+            function (success) {
+                return  success[0].url;
+            }
+        ).catch(
+            function (error) {
+                handleAjaxError();
+            }
+        );
     }
 
     function saveAuthInSession(userInfo) {
@@ -263,7 +358,7 @@ function startApp() {
             function appendPlayerRow(player, playersTable, counter) {
                 playersTable.append($("<tr>").append(
                     $("<td>").text(counter),
-                    $("<td>").html(`<a href='#'>${player.name}</a>`).click(showPlayer.bind(this, player)),
+                    $("<td>").html(`<a href='#' data-id=${player.userId}>${player.name}</a>`).click(showPlayer.bind(this, player)),
                     $("<td class=\"buttonsTd\">").append($('<button type="button" class="btn btn-default btn-md mybtn-red"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></button>')
                         .click(removePlayer.bind(this, player)))
                 ));
@@ -271,30 +366,57 @@ function startApp() {
         }
     }
 
-    // TODO: 
-    function showPlayer(player) {
+    function showPlayer(elem, player) {
         $("main > section").hide();
         $("#viewPlayerInfo").empty();
         $("#viewPlayerInfo").show();
 
-        let query = `?query={"username":"${player.name}"}`;
+        let query = `?query={"username":"${elem.name}"}`;
         $.ajax({
             method: "GET",
             url: kinveyBaseUrl + "user/" + kinveyAppKey + "/" + query,
-            headers: getKinveyUserAuthHeaders(),
-            success: loadPlayerInfo,
-            error: handleAjaxError
-        });
+            headers: getKinveyUserAuthHeaders()
+        }).then(
+            function(data) {
+                if (JSON.stringify(data) === "[]") {
+                    $("#viewPlayerInfo").append($("<div><h3>Няма тъкав регистриран играч</h3>"));
+                } else {
+                    let query = `?query={"_acl.creator":"${data[0]._id}"}`;
+                    let requestUrl = kinveyBaseUrl + "appdata/" + kinveyAppKey + "/photos/" + query;
+                    let requestHeaders = {
+                        'Authorization': `Kinvey ${localStorage.getItem("authToken")}`,
+                        'Content-Type': 'application/json'
+                    };
 
-        function loadPlayerInfo(data) {
-            if (JSON.stringify(data) === "[]") {
-                $("#viewPlayerInfo").append($("<div><h3>Няма тъкав регистриран играч</h3>"));
-            } else {
-                let playerInfoDiv = $("<div>").append(`<h3>${data[0].firstName} ${data[0].lastName}`)
-                .append(`<p>${data[0].phone}`);
-                $("#viewPlayerInfo").append(playerInfoDiv);
+                    $.ajax({
+                        method: "GET",
+                        url: requestUrl,
+                        headers: requestHeaders
+                    }).then(
+                        function (success) {
+                            let url = success[0].url;
+
+                            let playerInfoDiv = $("<div>")
+                                .append(`<h3>${data[0].firstName} ${data[0].lastName}`)
+                                .append(`<p>${data[0].phone}`);
+
+                            if (success !== "[]") {
+                                playerInfoDiv.prepend(`<img class="photo" src=${url} />`);
+                            }
+                            $("#viewPlayerInfo").append(playerInfoDiv);
+                        }
+                    ).catch(
+                        function (error) {
+                            handleAjaxError();
+                        }
+                    );
+                }
             }
-        }
+        ).catch(
+            function(error) {
+                handleAjaxError();
+            }
+        );
     }
 
     function getKinveyUserAuthHeaders() {
@@ -304,7 +426,11 @@ function startApp() {
     }
     
     function createPlayer(matchId) {
-        let playerData = {"name": $("#playerName").val(), "match_id":matchId};
+        let userId = null;
+        if ($("#playerName").val() === localStorage.getItem("username")) {
+            userId = localStorage.getItem("userId");
+        }
+        let playerData = {"name": $("#playerName").val(), "match_id":matchId, "userId":userId};
 
         $.ajax({
             method: "POST",
@@ -340,7 +466,7 @@ function startApp() {
             e.preventDefault();
 
             let data = $(this).closest("form");
-            let serialized = `${data.serialize()}&username=${localStorage.getItem("username")}&match_id=${date}&date=${new Date()}`;
+            let serialized = `${data.serialize()}&username=${localStorage.getItem("username")}&match_id=${date}&date=${moment().format('LTS')}`;
 
             $.ajax({
                 method: "POST",
@@ -378,10 +504,9 @@ function startApp() {
         }
 
         function appendMessageRaw(m, messageContainer) {
-            let date = new Date(m.date);
             let pMessage = $("<p class=\"messages\">");
             let spanUsername = $("<span class=\"boldUsername\">").text(m.username);
-            let spanMessage = $("<span>").text(` (${date.getHours()}:${date.getMinutes()}): ${m.message}`);
+            let spanMessage = $("<span class=\"messageText\">").text(` (${m.date}): ${m.message}`);
             pMessage.append(spanUsername);
             pMessage.append(spanMessage);
             messageContainer.append(pMessage);

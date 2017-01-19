@@ -56,10 +56,10 @@ footer {
 .buttonsTd {
     text-align: center;
 }
-img {
+/*img {
     width: 20px;
     vertical-align: middle;
-}
+}*/
 #playersDiv {
     width: 40%;
     float: left;
@@ -86,6 +86,10 @@ img {
     margin: 0 5px;
     font-size: 0.8em;
 }
+.messageText {
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
 #inputMessage {
     width: 100%;
 }
@@ -104,6 +108,9 @@ img {
 .glyphicon-plus-sign {
     line-height: 100%;
     animation: pulse 3s infinite;
+}
+.photo {
+    width: 20%;
 }
 
 @-moz-keyframes pulse {
