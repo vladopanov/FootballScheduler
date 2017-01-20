@@ -62,6 +62,11 @@ function startApp() {
 
     function showHomeView() {
         showView('viewHome');
+        if (localStorage.getItem("authToken")) {
+            $("#loginRegisterMessage").hide();
+        } else {
+            $("#loginRegisterMessage").show();
+        }
     }
 
     function showLoginView() {

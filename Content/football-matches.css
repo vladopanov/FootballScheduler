@@ -1,22 +1,23 @@
 body {
     background: url("../resources/grassmain.jpg") repeat-x;
-    font-family: "Arial", serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
-    color: #3c3f41;
+    color: black;
 }
 
 #wrapper {
     margin: 0 auto;
     width: 80%;
+    background-color: white;
+    opacity: 0.8;
 }
 #menu {
-    background: #DDD;
+    background: lightgrey;
     text-align: center;
     padding: 5px;
     line-height: 1.5;
     border-radius: 3px;
     overflow: auto;
-    opacity: 0.5;
 }
 
 #menu a {
@@ -32,6 +33,7 @@ body {
 main > section {
     display: none;
     padding: 20px 5px;
+    text-align: center;
 }
 table th {
     background: #DDD;
@@ -52,7 +54,12 @@ footer {
     text-align: center;
     border-radius: 3px;
 }
-
+input {
+    background-color: lightgrey;
+}
+td {
+    text-align: left;
+}
 .buttonsTd {
     text-align: center;
 }
@@ -81,6 +88,7 @@ footer {
 #messagesContainer {
     background-color: #EEE;
     border: thin black;
+    text-align: left;
 }
 .messages {
     margin: 0 5px;
@@ -98,6 +106,10 @@ footer {
 }
 .boldUsername {
     font-weight: bold;
+}
+#fileInput {
+    margin: 0 auto;
+    margin-bottom: 2px;
 }
 .glyphicon-minus-sign {
     color: red;
