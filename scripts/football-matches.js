@@ -39,7 +39,9 @@ function startApp() {
         $("#linkHome").show();
         if (localStorage.getItem('authToken')) {
             // We have logged in user
-            $('#loggedInUser').text(", " + localStorage.getItem('username'));
+            $("#loggedInUser").text(", " + localStorage.getItem('username'));
+            $("#loginRegisterMessage").hide();
+
 
             $("#linkLogin").hide();
             $("#linkRegister").hide();
