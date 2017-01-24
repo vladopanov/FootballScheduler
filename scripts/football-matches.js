@@ -42,7 +42,6 @@ function startApp() {
             $("#loggedInUser").text(", " + localStorage.getItem('username'));
             $("#loginRegisterMessage").hide();
 
-
             $("#linkLogin").hide();
             $("#linkRegister").hide();
             $("#linkListPlayers").show();
@@ -64,6 +63,7 @@ function startApp() {
 
     function showHomeView() {
         showView('viewHome');
+        $("#viewProfile").hide();
         if (localStorage.getItem("authToken")) {
             $("#loginRegisterMessage").hide();
         } else {
@@ -143,6 +143,10 @@ function startApp() {
 
     function uploadPhoto() {
         let file = $("#formRegister input[name=photo]")[0].files[0];
+        if (file == undefined) {
+            console.log("File empty");
+            return false;
+        }
         let metaData = {
             "_filename": file.name,
             "size": file.size,
@@ -183,16 +187,18 @@ function startApp() {
                     processData: false,
                     data: file
                 }).then(
-                    function (success) {
+                    function () {
                         noty({ text: "Успешно качена снимка", type: "success" });
                     }
                 ).catch(
-                    function (error) {
+                    function () {
                         handleAjaxError();
                     }
                 );
             }
         }
+
+        return false;
     }
 
     function createPhoto(url) {
@@ -208,31 +214,8 @@ function startApp() {
             success: createPhotoSuccess,
             error: handleAjaxError
         });
-        function createPhotoSuccess(success) {
+        function createPhotoSuccess() {
         }
-    }
-
-    function downloadPhoto(id) {
-        let query = `?query={"_acl.creator":"${id}"}`;
-        let requestUrl = kinveyBaseUrl + "appdata/" + kinveyAppKey + "/photos/" + query;
-        let requestHeaders = {
-            'Authorization': `Kinvey ${localStorage.getItem("authToken")}`,
-            'Content-Type': 'application/json'
-        };
-
-        $.ajax({
-            method: "GET",
-            url: requestUrl,
-            headers: requestHeaders
-        }).then(
-            function (success) {
-                return  success[0].url;
-            }
-        ).catch(
-            function (error) {
-                handleAjaxError();
-            }
-        );
     }
 
     function saveAuthInSession(userInfo) {
@@ -413,14 +396,14 @@ function startApp() {
                             $("#viewPlayerInfo").append(playerInfoDiv);
                         }
                     ).catch(
-                        function (error) {
+                        function () {
                             handleAjaxError();
                         }
                     );
                 }
             }
         ).catch(
-            function(error) {
+            function() {
                 handleAjaxError();
             }
         );
